@@ -53,6 +53,13 @@ Datum fio_writefile(PG_FUNCTION_ARGS) {
     vcontent = PG_GETARG_BYTEA_P(1);
     
     filename = text_to_cstring(vfilename);
+#ifdef FIO_UNAUTHORIZED_PATH
+    if (FIO_UNAUTHORIZED_PATH(filename)) {
+        elog(ERROR, "unauthorized path");
+        return 0;
+    }
+#endif
+
     contentsize = VARSIZE(vcontent) - VARHDRSZ;
     
     if (!PG_ARGISNULL(2)) {

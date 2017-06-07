@@ -50,6 +50,12 @@ Datum fio_readfile(PG_FUNCTION_ARGS) {
     }
     v_filename = PG_GETARG_TEXT_P(0);
     filename = text_to_cstring(v_filename);
+#ifdef FIO_UNAUTHORIZED_PATH
+    if (FIO_UNAUTHORIZED_PATH(filename)) {
+        elog(ERROR, "unauthorized path");
+        return 0;
+    }
+#endif
     dir = opendir(filename);
     if (dir != NULL) {
         closedir(dir);

@@ -45,6 +45,12 @@ Datum fio_chmod(PG_FUNCTION_ARGS) {
     }
     v_pathname = PG_GETARG_TEXT_P(0);
     pathname = text_to_cstring(v_pathname);
+#ifdef FIO_UNAUTHORIZED_PATH
+    if (FIO_UNAUTHORIZED_PATH(pathname)) {
+        elog(ERROR, "unauthorized path");
+        return 0;
+    }
+#endif
     if (PG_ARGISNULL(1)) {
         elog(ERROR, "mode must be specified");
         return 0;

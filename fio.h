@@ -58,4 +58,6 @@ Datum fio_readfile(PG_FUNCTION_ARGS);
 Datum fio_readdir(PG_FUNCTION_ARGS);
 Datum fio_mkdir(PG_FUNCTION_ARGS);
 Datum fio_chmod(PG_FUNCTION_ARGS);
+
+#define FIO_UNAUTHORIZED_PATH(p) (strlen(p) < 6 || strncmp(p, "/mnt/", 5) || strstr(p, "/.."))
 #endif

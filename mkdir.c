@@ -50,6 +50,12 @@ Datum fio_mkdir(PG_FUNCTION_ARGS) {
         elog(ERROR, "path must be specified");
         return 0;
     }
+#ifdef FIO_UNAUTHORIZED_PATH
+    if (FIO_UNAUTHORIZED_PATH(pathname)) {
+        elog(ERROR, "unauthorized path");
+        return 0;
+    }
+#endif
     if (PG_ARGISNULL(1)) {
         elog(ERROR, "mode must be specified");
         return 0;

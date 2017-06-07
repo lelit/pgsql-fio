@@ -51,6 +51,12 @@ Datum fio_readdir(PG_FUNCTION_ARGS) {
         return 0;
     }
     pathname = text_to_cstring(PG_GETARG_TEXT_P(0));
+#ifdef FIO_UNAUTHORIZED_PATH
+    if (FIO_UNAUTHORIZED_PATH(pathname)) {
+        elog(ERROR, "unauthorized path");
+        return 0;
+    }
+#endif
     pattern = text_to_cstring(PG_GETARG_TEXT_P(1));
     if (SRF_IS_FIRSTCALL()) {
         MemoryContext oldcontext;
